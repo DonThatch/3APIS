@@ -1,7 +1,9 @@
+// @ts-ignore
 import type { Request, Response } from "express";
 import { User } from "../models/user.model.ts";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
+import {JWT_SECRET_KEY} from "../config/env.config.ts";
 
 export const createUser = async (req: Request, res: Response) => {
     const { email, username, password } = req.body;
@@ -58,7 +60,7 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Invalid email or password." });
         }
 
-        const secretKey = Deno.env.get('JWT_SECRET_KEY') || "your_secret_key";
+        const secretKey = JWT_SECRET_KEY || "your_secret_key";
         const token = jwt.sign({ _id: user._id, email: user.email }, secretKey, { expiresIn: "1h" });
 
         res.json({ token });
