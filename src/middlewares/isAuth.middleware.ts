@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-
+import { JWT_SECRET_KEY } from "../config/env.config.ts";
 dotenv.config();
 
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction): void => {
@@ -12,9 +12,10 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
         return;
     }
     try {
-        const secretKey = process.env.JWT_SECRET_KEY || "secret_key";
-        const decoded = jwt.verify(token, secretKey);
+        const secretKey = JWT_SECRET_KEY || "your_secret_key";
 
+        const decoded = jwt.verify(token, secretKey);
+        console.log(decoded);
         (req as any).user = decoded;
 
         next();

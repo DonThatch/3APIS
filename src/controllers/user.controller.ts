@@ -46,22 +46,24 @@ export const getUserById = async (req: Request, res: Response) => {
     }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) : Promise<void> => {
     const { email, password } = req.body;
 
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: "Invalid email or password." });
+             res.status(400).json({ message: "Invalid email or password." });
+             return
         }
 
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
-            return res.status(400).json({ message: "Invalid email or password." });
+             res.status(400).json({ message: "Invalid email or password." });
+             return
         }
 
         const secretKey = JWT_SECRET_KEY || "your_secret_key";
-        const token = jwt.sign({ _id: user._id, email: user.email }, secretKey, { expiresIn: "1h" });
+        const token = jwt.sign({ _id: user._id, email: user.email, role: user.role }, secretKey, { expiresIn: "1h" });
 
         res.json({ token });
     } catch (error: any) {
@@ -69,11 +71,12 @@ export const login = async (req: Request, res: Response) => {
     }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response) : Promise<void> => {
     try {
         const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+             res.status(404).json({ message: "User not found" });
+            return
         }
         res.json(user);
     } catch (error: any) {
@@ -81,11 +84,12 @@ export const updateUser = async (req: Request, res: Response) => {
     }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response) : Promise<void> => {
     try {
         const user = await User.findByIdAndDelete(req.params.id);
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+             res.status(404).json({ message: "User not found" });
+            return
         }
         res.status(200).json({ message: "User deleted successfully" });
     } catch (error: any) {
