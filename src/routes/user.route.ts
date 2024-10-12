@@ -1,7 +1,7 @@
 import express from "express";
 
 import {createUser, deleteUser, getAllUsers, getUserById, login, updateUser} from "../controllers/user.controller.ts";
-import { isAuthenticated } from "../middlewares/isAuth.middleware.ts";
+import {isAuthenticated} from "../middlewares/isAuth.middleware.ts";
 
 const userRouter = express.Router();
 
