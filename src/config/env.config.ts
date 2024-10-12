@@ -1,7 +1,5 @@
-import "jsr:@std/dotenv/load";
-
 const PORT = process.env.APP_PORT ?? 3000;
-const BDD_URL = process.env.BDD_URL ?? "mongodb://localhost:27017";
+const BDD_URL = process.env.BDD_URL ?? "mongodb://localhost:27017/railroad";
 const JWT_SECRET_KEY = process.env.JWT_SECRET
 
 interface CustomError extends Error {

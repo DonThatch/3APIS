@@ -1,7 +1,8 @@
 import type {NextFunction, Request, Response} from "express";
 import { User } from "../models/user.model.ts";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
+import {JWT_SECRET_KEY} from "../config/env.config.ts";
 
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -42,24 +43,24 @@ export const getUserById = async (req: Request, res: Response) => {
     }
 };
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+export const login = async (req: Request, res: Response) : Promise<void> => {
     const { email, password } = req.body;
 
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            res.status(400).json({ message: "Invalid email or password." });
-            return;
+             res.status(400).json({ message: "Invalid email or password." });
+             return
         }
 
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
-            res.status(400).json({ message: "Invalid email or password." });
-            return;
+             res.status(400).json({ message: "Invalid email or password." });
+             return
         }
 
-        const secretKey = process.env.JWT_SECRET_KEY || "secret_key";
-        const token = jwt.sign({ _id: user._id, email: user.email }, secretKey, { expiresIn: "1h" });
+        const secretKey = JWT_SECRET_KEY || "your_secret_key";
+        const token = jwt.sign({ _id: user._id, email: user.email, role: user.role }, secretKey, { expiresIn: "1h" });
 
         res.json({ token });
     } catch (error: any) {
@@ -67,15 +68,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const updateUser = async (req: Request, res: Response) : Promise<void> => {
     try {
         const { id } = req.params;
         const { username, password } = req.body;
         const user = await User.findById(id);
 
         if (!user) {
-            res.status(404).json({ message: "User not found" });
-            return;
+             res.status(404).json({ message: "User not found" });
+            return
         }
 
         user.username = username || user.username;
@@ -91,14 +92,14 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     }
 };
 
-export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteUser = async (req: Request, res: Response) : Promise<void> => {
     try {
         const { id } = req.params;
         const user = await User.findByIdAndDelete(id);
 
         if (!user) {
-            res.status(404).json({ message: "User not found" });
-            return;
+             res.status(404).json({ message: "User not found" });
+            return
         }
 
         res.status(200).json({ message: "User deleted successfully" });
