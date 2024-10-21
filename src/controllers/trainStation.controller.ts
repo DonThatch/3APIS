@@ -9,14 +9,10 @@ export const createTrainStation = async (req: Request, res: Response): Promise<v
         const newTrainStation = await TrainStation.create({
             name,
             open_hour,
-            close_hour
+            close_hour,
+            image: req.file ? req.file.path : "stationImages\\default.jpg"
         });
 
-        if (req.file){
-            newTrainStation.image = req.file.path;
-        }else {
-            newTrainStation.image = "stationImages\\default.jpg";
-        }
         res.status(201).json({ message: "Train station created successfully", trainStation: newTrainStation });
     } catch (error) {
         res.status(500).json({ message: "Error creating train station", error });
@@ -76,6 +72,6 @@ export const deleteTrainStation = async (req: Request, res: Response) => {
             res.status(404).json({ message: "Train station not found" });
         }
     } catch (error: any) {
-        res.status(500).json({ error: error.message });
+        res.status(error.status).json({ error: error.message });
     }
 };

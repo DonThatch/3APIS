@@ -1,12 +1,21 @@
 import multer from 'multer';
-import * as path from "node:path";
+import path from "node:path";
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../stationImages'));
+const storage = multer({
+    dest: "stationImages/",
+    limits: {
+        fileSize: 5 * 1024 * 1024,
     },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
+    fileFilter: function (req, file, cb) {
+        const filetypes = /jpeg|jpg|png/;
+        const mimetype = filetypes.test(file.mimetype);
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        if(mimetype && extname) {
+            cb(null, true);
+        }else{
+            cb(new Error('Only images (jpeg, jpg, png) are allowed!'));
+        }
     }
 });
-export const upload = multer({ storage: storage }).single('image');
+
+export const addImage = storage.single("image");
