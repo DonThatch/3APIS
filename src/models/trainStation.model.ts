@@ -1,5 +1,7 @@
+//import de mongoose
 import mongoose from "mongoose";
 
+//definition du schema de la collection TrainStation
 const trainStationSchema = new mongoose.Schema({
     id: {
         type: Number,

@@ -1,10 +1,15 @@
-import { Train } from "../models/train.model";
+//import des Models
+import { Train } from "../models/train.model"
+import {Ticket} from "../models/ticket.model.ts";
+
+//import des utilitaires
 import type { Request, Response } from "express";
 
 
 
 
-export const getTrain = async (req: Request, res: Response)  => {
+
+export const getTrain = async (req: Request, res: Response): Promise<Response | void> => {
     try {
         const { name, start_station, end_station, departure_time } = req.query ;
 
@@ -60,6 +65,7 @@ export const deleteTrain = async (req: Request, res: Response) => {
     try {
         const train = await Train.findByIdAndDelete(req.params.id);
         if (train) {
+            await Ticket.updateMany({ trainName: train.name }, { status: "cancelled" });
             res.json(train);
         } else {
             res.status(404).json({ message: "Cannot delete : Train not found" });

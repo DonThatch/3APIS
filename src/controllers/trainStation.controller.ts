@@ -1,6 +1,11 @@
-import type { Request, Response } from "express";
+//import des Models
 import { TrainStation } from "../models/trainStation.model.ts";
 import {Train} from "../models/train.model.ts";
+import {Ticket} from "../models/ticket.model.ts";
+
+//import des utilitaires
+import type { Request, Response } from "express";
+
 
 export const createTrainStation = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -60,6 +65,17 @@ export const deleteTrainStation = async (req: Request, res: Response) => {
         const trainStation = await TrainStation.findByIdAndDelete(stationId);
 
         if (trainStation) {
+            const trains = await Train.find({
+            $or: [
+                { start_station: stationId },
+                { end_station: stationId }
+            ]});
+
+            const trainNames = trains.map(train => train.name);
+            console.log(trainNames);
+            await Ticket.updateMany({
+                trainName: { $in: trainNames }
+            }, { status: "cancelled" });
             // Delete all trains where the station is either start_station or end_station
             await Train.deleteMany({
                 $or: [
@@ -67,10 +83,13 @@ export const deleteTrainStation = async (req: Request, res: Response) => {
                     { end_station: stationId }
                 ]
             });
-            res.json({ message: "Train station and associated trains deleted successfully" });
-        } else {
-            res.status(404).json({ message: "Train station not found" });
-        }
+
+
+
+                    res.json({ message: "Train station associated trains and tickets deleted successfully" });
+                } else {
+                    res.status(404).json({ message: "Train station not found" });
+                }
     } catch (error: any) {
         res.status(error.status).json({ error: error.message });
     }
