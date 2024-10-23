@@ -5,6 +5,7 @@ import { isAdminAuth} from "../middlewares/isAuth.middleware.ts";
 const trainRouter = express.Router();
 
 
+// @ts-ignore
 trainRouter.get("/", getTrain);
 trainRouter.post("/", isAdminAuth, createTrain);
 trainRouter.put("/:id", isAdminAuth, updateTrain);
