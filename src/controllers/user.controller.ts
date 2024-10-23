@@ -1,5 +1,8 @@
-import type {NextFunction, Request, Response} from "express";
+//import du Model User
 import { User } from "../models/user.model.ts";
+
+//import des utilitaires
+import type {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import {JWT_SECRET_KEY} from "../config/env.config.ts";

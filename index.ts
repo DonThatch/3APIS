@@ -8,6 +8,7 @@ import {PORT} from "./src/config/env.config.ts";
 import userRouter from "./src/routes/user.route.ts";
 import trainRouter from "./src/routes/train.route.ts";
 import trainStationRoute from "./src/routes/trainStation.route.ts";
+import ticketRouter from "./src/routes/ticket.route.ts";
 
 const app = express();
 
@@ -28,7 +29,6 @@ const swaggerSpec = swaggerJsDoc({
     apis: ["swagger.yaml"]
 });
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -41,6 +41,9 @@ app.use("/train", trainRouter)
 
 //ajout des routes trainStation
 app.use("/trainStation", trainStationRoute)
+
+//ajout des routes ticket
+app.use("/ticket", ticketRouter)
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

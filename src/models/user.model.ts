@@ -1,5 +1,7 @@
+//import de mongoose
 import mongoose from "mongoose";
 
+//définition du schéma de la collection User
 const userSchema = new mongoose.Schema({
     email: {
         type: String,

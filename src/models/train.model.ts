@@ -1,7 +1,10 @@
+//import de mongoose
 import mongoose, {Schema, models} from "mongoose";
+
+//import du model TrainStation
 import {TrainStation} from "./trainStation.model.ts";
 
-
+//definition du schema de la collection Train
 const trainSchema = new mongoose.Schema({
     name:{
         type: String,
