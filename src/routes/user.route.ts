@@ -1,13 +1,13 @@
 import express from "express";
 
 import {createUser, deleteUser, getAllUsers, getUserById, login, updateUser} from "../controllers/user.controller.ts";
-import { isAuthenticated, isEmployeeAuth } from "../middlewares/isAuth.middleware.ts";
+import {isAdminAuth, isAuthenticated, isEmployeeAuth} from "../middlewares/isAuth.middleware.ts";
 
 //router pour les utilisateurs
 const userRouter = express.Router();
 
 userRouter.get("/",isEmployeeAuth, getAllUsers);
-userRouter.get("/:id", isAuthenticated, getUserById);
+userRouter.get("/:id", isEmployeeAuth, getUserById);
 
 userRouter.post("/register", createUser);
 userRouter.post("/login", login);
