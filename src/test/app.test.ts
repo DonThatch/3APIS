@@ -7,10 +7,12 @@ import { Ticket } from '../models/ticket.model';
 import bcrypt from "bcryptjs";
 import {User} from "../models/user.model";
 import {Train} from "../models/train.model";
+import {createTrain, getTrain} from "../controllers/train.controller.ts";
 
 vi.mock('../models/train.model', () => ({
     Train: {
         findOne: vi.fn(),
+        save: vi.fn()
     },
 }));
 
@@ -247,3 +249,78 @@ describe('validateTicket Controller', () => {
         expect(res.status).toHaveBeenCalledWith(200);
     });
 });
+
+///////////////////////////////////////////////////////////////////////////
+////////////////////////// Train Controller ///////////////////////////////
+///////////////////////////////////////////////////////////////////////////²
+
+describe('Train Controller', () =>{
+    beforeEach(() => {
+        vi.clearAllMocks(); // Réinitialise tous les mocks avant chaque test
+    });
+    // it('should return 200 if train is found', async () => {
+    //     const req = {
+    //         query: { name: 'Express' },
+    //     } as unknown as Request;
+    //
+    //     const res = {
+    //         status: vi.fn().mockReturnThis(),
+    //         json: vi.fn(),
+    //     } as unknown as Response;
+    //
+    //     (Train.findOne as Mock).mockResolvedValue({ _id: 'train123', name: 'Express' });
+    //
+    //     await getTrain(req, res);
+    //
+    //     expect(res.status).toHaveBeenCalledWith(200);
+    // });
+    it('should return 400 if request body is invalid', async () => {
+        const req = {
+            body: {},
+        } as unknown as Request;
+
+        const res = {
+            status: vi.fn().mockReturnThis(),
+            json: vi.fn(),
+        } as unknown as Response;
+
+        await createTrain(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+
+    });
+
+    // it('should return 201 and create a train if request body is valid', async () => {
+    //     const req = {
+    //         body: {
+    //             name: 'Express',
+    //             start_station: "lille",
+    //             end_station: "paris",
+    //             departure_time: new Date('2022-12-12T12:00:00.000Z'), // envoie un objet Date
+    //         },
+    //     } as unknown as Request;
+    //
+    //     const res = {
+    //         status: vi.fn().mockReturnThis(),
+    //         json: vi.fn(),
+    //     } as unknown as Response;
+    //
+    //     const mockTrain = {
+    //         _id: 'new_train',
+    //         name: 'Express',
+    //         start_station: "lille",
+    //         end_station: "paris",
+    //         departure_time: new Date('2022-12-12T12:00:00.000Z'),
+    //         save: vi.fn().mockResolvedValue({ _id: 'new_train' }), // Simule la sauvegarde
+    //     };
+    //
+    //     // Simulez une nouvelle instance de Train
+    //     (Train.prototype.save as Mock).mockResolvedValue(mockTrain);
+    //
+    //     await createTrain(req, res);
+    //
+    //     expect(res.status).toHaveBeenCalledWith(201);
+    //     expect(res.json).toHaveBeenCalledWith({ _id: 'new_train' });
+    // });
+});
+
