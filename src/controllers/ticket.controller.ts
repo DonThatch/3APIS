@@ -27,7 +27,7 @@ export const getTicket = async (req: Request, res: Response) => {
             res.status(404).json({message: "Ticket not found"});
         }
     } catch (error: any) {
-        res.status(500).json({error: error.message});
+        res.status(401).json({error:"Invalid Token"});
     }
 }
 
@@ -71,7 +71,7 @@ export const validateTicket = async (req: Request, res: Response) => {
         if (ticket) {
             ticket.status = "validate";
             await ticket.save();
-            res.json(ticket);
+            res.status(200).json(ticket);
         } else {
             res.status(404).json({message: "Ticket not found"});
         }
