@@ -5,7 +5,7 @@ RailRoad API is a project for managing users, tickets, trains, and train station
 ## Prerequisites
 
 - Node.js (v16 or higher)
-- Bun (v0.1.0 or higher)
+- Bun (v0.1.0 or higher) [Documentation](https://bun.sh)
 - MongoDB (running instance)
 
 ## Installation
@@ -40,6 +40,14 @@ RailRoad API is a project for managing users, tickets, trains, and train station
     ```
 
    The server will start on `http://localhost:3000`.
+
+## Running Tests
+
+1. **Run the tests:**
+
+    ```sh
+    bun run test
+    ```
 
 ## API Documentation
 
